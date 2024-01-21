@@ -30,12 +30,9 @@ public class DeathmatchPlugin : BasePlugin
             // Console.WriteLine("Updating spawn point statuses.");
         }, TimerFlags.REPEAT);
 
-        AddTimer(0.5f, () =>
-        {
-            // Remove weapons on the ground.
-            // Console.WriteLine("Removing weapons on the ground.");
-        }, TimerFlags.REPEAT);
+        AddTimer(0.5f, Helpers.RemoveWeaponsOnGround, TimerFlags.REPEAT);
     }
+    
 
     [GameEventHandler(HookMode.Pre)]
     public HookResult OnPlayerTeam(EventPlayerTeam @event, GameEventInfo info)
