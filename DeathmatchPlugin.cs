@@ -1,14 +1,14 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
-using DeathmatchPlugin.Modules.Managers;
 using Helpers = DeathmatchPlugin.Modules.Helpers;
 
 namespace DeathmatchPlugin;
 
-[MinimumApiVersion(147)]
+[MinimumApiVersion(150)]
 public class DeathmatchPlugin : BasePlugin
 {
     private const string Version = "0.0.1";
@@ -30,6 +30,11 @@ public class DeathmatchPlugin : BasePlugin
         Console.WriteLine("Deathmatch loaded!");
 
         RegisterListener<Listeners.OnMapStart>(OnMapStart);
+
+        if (hotReload)
+        {
+            OnMapStart(Server.MapName);
+        }
     }
 
     private void OnMapStart(string mapName)
