@@ -1,6 +1,8 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Timers;
 
 namespace DeathmatchPlugin;
@@ -11,7 +13,7 @@ public class DeathmatchPlugin : BasePlugin
     public override string ModuleName => "Deathmatch Plugin";
     public override string ModuleVersion => "0.0.1";
     public override string ModuleAuthor => "B3none";
-    public override string ModuleDescription => "Free for all deathmatch game mode for CS2.";
+    public override string ModuleDescription => "Community deathmatch for CS2.";
 
     public override void Load(bool hotReload)
     {
@@ -25,13 +27,13 @@ public class DeathmatchPlugin : BasePlugin
         AddTimer(0.5f, () =>
         {
             // Update spawn point statuses.
-            Console.WriteLine("Updating spawn point statuses.");
+            // Console.WriteLine("Updating spawn point statuses.");
         }, TimerFlags.REPEAT);
 
         AddTimer(0.5f, () =>
         {
             // Remove weapons on the ground.
-            Console.WriteLine("Removing weapons on the ground.");
+            // Console.WriteLine("Removing weapons on the ground.");
         }, TimerFlags.REPEAT);
     }
 
