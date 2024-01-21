@@ -2,6 +2,8 @@
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Timers;
+using DeathmatchPlugin.Modules.Managers;
+using Helpers = DeathmatchPlugin.Modules.Helpers;
 
 namespace DeathmatchPlugin;
 
@@ -138,6 +140,17 @@ public class DeathmatchPlugin : BasePlugin
     public HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
     {
         Console.WriteLine("OnPlayerSpawn event fired!");
+        
+        var player = @event.Userid;
+        
+        if (!Helpers.IsValidPlayer(player))
+        {
+            return HookResult.Continue;
+        }
+        
+        // Remove a players weapons and allocate them a new set.
+        player.RemoveWeapons();
+        AllocationManager.Allocate(player);
         
         return HookResult.Continue;
     }
