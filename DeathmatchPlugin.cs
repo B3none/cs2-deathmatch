@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Timers;
+using CounterStrikeSharp.API.Modules.Utils;
 using DeathmatchPlugin.Modules.Managers;
 using Helpers = DeathmatchPlugin.Modules.Helpers;
 
@@ -10,11 +11,20 @@ namespace DeathmatchPlugin;
 [MinimumApiVersion(147)]
 public class DeathmatchPlugin : BasePlugin
 {
+    private const string Version = "0.0.1";
+    
+    #region Plugin info
     public override string ModuleName => "Deathmatch Plugin";
-    public override string ModuleVersion => "0.0.1";
+    public override string ModuleVersion => Version;
     public override string ModuleAuthor => "B3none";
     public override string ModuleDescription => "Community deathmatch for CS2.";
+    #endregion
 
+    #region Constants
+    public static readonly string LogPrefix = $"[Deathmatch {Version}] ";
+    public static readonly string MessagePrefix = $"[{ChatColors.Green}Deathmatch{ChatColors.White}] ";
+    #endregion
+    
     public override void Load(bool hotReload)
     {
         Console.WriteLine("Deathmatch loaded!");
@@ -31,9 +41,10 @@ public class DeathmatchPlugin : BasePlugin
         }, TimerFlags.REPEAT);
 
         AddTimer(0.5f, Helpers.RemoveWeaponsOnGround, TimerFlags.REPEAT);
+        
+        Helpers.ExecuteDeathmatchConfiguration();
     }
     
-
     [GameEventHandler(HookMode.Pre)]
     public HookResult OnPlayerTeam(EventPlayerTeam @event, GameEventInfo info)
     {

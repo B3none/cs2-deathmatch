@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Utils;
 
@@ -9,6 +10,11 @@ public static class Helpers
     public static bool IsValidPlayer(CCSPlayerController? player)
     {
         return player != null && player.IsValid;
+    }
+    
+    public static void ExecuteDeathmatchConfiguration()
+    {
+        Server.ExecuteCommand("execifexists cs2-deathmatch/deathmatch.cfg");
     }
 
     public static void RemoveWeaponsOnGround()
