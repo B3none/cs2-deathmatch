@@ -1,6 +1,7 @@
 ﻿using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Timers;
 
 namespace DeathmatchPlugin;
 
@@ -15,6 +16,23 @@ public class DeathmatchPlugin : BasePlugin
     public override void Load(bool hotReload)
     {
         Console.WriteLine("Deathmatch loaded!");
+
+        RegisterListener<Listeners.OnMapStart>(OnMapStart);
+    }
+
+    private void OnMapStart(string mapName)
+    {
+        AddTimer(0.5f, () =>
+        {
+            // Update spawn point statuses.
+            Console.WriteLine("Updating spawn point statuses.");
+        }, TimerFlags.REPEAT);
+
+        AddTimer(0.5f, () =>
+        {
+            // Remove weapons on the ground.
+            Console.WriteLine("Removing weapons on the ground.");
+        }, TimerFlags.REPEAT);
     }
 
     [GameEventHandler(HookMode.Pre)]
