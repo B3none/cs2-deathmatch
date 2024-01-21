@@ -19,6 +19,8 @@ public static class Helpers
 
     public static void RemoveWeaponsOnGround()
     {
+        // TODO: Make this work.
+        
         // Console.WriteLine("Removing weapons on the ground.");
         var pEntity = new CEntityIdentity(EntitySystem.FirstActiveEntity);
         for (; pEntity != null && pEntity.Handle != IntPtr.Zero; pEntity = pEntity.Next)
@@ -27,8 +29,8 @@ public static class Helpers
                 
             if (
                 string.IsNullOrEmpty(designerName)
-                || designerName.StartsWith("weapon_")
-                || designerName.StartsWith("item_")
+                || !designerName.StartsWith("weapon_")
+                || !designerName.StartsWith("item_")
             )
             {
                 continue;

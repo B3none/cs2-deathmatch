@@ -55,9 +55,12 @@ public class DeathmatchPlugin : BasePlugin
     {
         Console.WriteLine("OnPlayerTeam event fired!");
         
-        // Ensure all team join events are silent.
-        @event.Silent = true;
-        
+        // Silence everything except the disconnect message.
+        if (!@event.Disconnect)
+        {
+            @event.Silent = true;
+        }
+
         return HookResult.Continue;
     }
 
