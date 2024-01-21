@@ -157,8 +157,8 @@ public class DeathmatchPlugin : BasePlugin
         }
         
         // Remove a players weapons and allocate them a new set.
-        player.RemoveWeapons();
-        AllocationManager.Allocate(player);
+        // player.RemoveWeapons();
+        // AllocationManager.Allocate(player);
         
         return HookResult.Continue;
     }

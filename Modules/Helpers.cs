@@ -25,28 +25,20 @@ public static class Helpers
         {
             var designerName = pEntity.DesignerName;
                 
-            if (string.IsNullOrEmpty(designerName))
+            if (
+                string.IsNullOrEmpty(designerName)
+                || designerName.StartsWith("weapon_")
+                || designerName.StartsWith("item_")
+            )
             {
                 continue;
             }
+            
+            var entity = new PointerTo<CBaseEntity>(pEntity.Handle).Value;
                 
-            if (designerName.StartsWith("weapon_"))
+            if (entity.IsValid)
             {
-                var entity = new PointerTo<CBasePlayerWeapon>(pEntity.Handle).Value;
-                
-                if (entity.IsValid)
-                {
-                    entity.AcceptInput("Kill");
-                }
-            }
-            else if (designerName.StartsWith("item_"))
-            {
-                var entity = new PointerTo<CWeaponBaseItem>(pEntity.Handle).Value;
-                
-                if (entity.IsValid)
-                {
-                    entity.AcceptInput("Kill");
-                }
+                entity.AcceptInput("Kill");
             }
         }
     }
