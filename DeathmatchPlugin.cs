@@ -49,6 +49,13 @@ public class DeathmatchPlugin : BasePlugin
             return;
         }
         
+        var headshotOnlyCvar = ConVar.Find("mp_damage_headshot_only");
+        if (headshotOnlyCvar != null && headshotOnlyCvar.GetPrimitiveValue<int>() == 1)
+        {
+            player.PrintToChat($"{MessagePrefix}Headshot only mode is {ChatColors.Green}permanently enabled{ChatColors.White} for everyone.");
+            return;
+        }
+        
         if (!_headshotOnlyPlayers.Add(player))
         {
             _headshotOnlyPlayers.Remove(player);
