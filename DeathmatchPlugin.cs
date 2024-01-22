@@ -2,7 +2,9 @@
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Cvars;
+using CounterStrikeSharp.API.Modules.Memory;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
 using Helpers = DeathmatchPlugin.Modules.Helpers;
@@ -35,6 +37,27 @@ public class DeathmatchPlugin : BasePlugin
         if (hotReload)
         {
             OnMapStart(Server.MapName);
+        }
+    }
+    
+    private readonly HashSet<CCSPlayerController> _headshotOnlyPlayers = new();
+    
+    [ConsoleCommand("css_headshot", "Toggles headshot only mode.")]
+    public void OnCommandHeadshot(CCSPlayerController? player, CommandInfo commandInfo)
+    {
+        if (player == null || !player.IsValid)
+        {
+            return;
+        }
+        
+        if (!_headshotOnlyPlayers.Add(player))
+        {
+            _headshotOnlyPlayers.Remove(player);
+            player.PrintToChat($"{MessagePrefix}Headshot only mode {ChatColors.DarkRed}disabled{ChatColors.White}.");
+        }
+        else
+        {
+            player.PrintToChat($"{MessagePrefix}Headshot only mode {ChatColors.Green}enabled{ChatColors.White}.");
         }
     }
 
@@ -76,13 +99,38 @@ public class DeathmatchPlugin : BasePlugin
 
         return HookResult.Continue;
     }
-
+    
     [GameEventHandler(HookMode.Pre)]
     public HookResult OnPlayerHurt(EventPlayerHurt @event, GameEventInfo info)
     {
-        Console.WriteLine("OnPlayerHurt event fired!");
+        var attacker = @event.Attacker;
         
-        return HookResult.Continue;
+        if (!_headshotOnlyPlayers.Contains(attacker))
+        {
+            return HookResult.Continue;
+        }
+
+        // If headshot, continue.
+        if (@event.Hitgroup == 1)
+        {
+            return HookResult.Continue;
+        }
+        
+        var victim = @event.Userid;
+        
+        if (victim == null || victim.PlayerPawn.Value == null)
+        {
+            return HookResult.Continue;
+        }
+
+        // Boost the victim health the amount they will be damaged.
+        victim.PlayerPawn.Value.Health = (victim.PlayerPawn.Value.Health + @event.DmgHealth);
+        Utilities.SetStateChanged(victim.PlayerPawn.Value, "CBaseEntity", "m_iHealth");
+        
+        victim.PlayerPawn.Value.ArmorValue = (victim.PlayerPawn.Value.ArmorValue + @event.DmgArmor);
+        Utilities.SetStateChanged(victim.PlayerPawn.Value, "CCSPlayerPawnBase", "m_ArmorValue");
+        
+        return HookResult.Changed;
     }
 
     [GameEventHandler]
