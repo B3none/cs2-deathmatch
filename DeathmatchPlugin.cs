@@ -157,6 +157,8 @@ public class DeathmatchPlugin : BasePlugin
     {
         Console.WriteLine("OnPlayerSpawn event fired!");
         
+        // TODO: Implement custom spawn logic.
+        
         return HookResult.Continue;
     }
 
@@ -190,14 +192,6 @@ public class DeathmatchPlugin : BasePlugin
         
             activeWeapon.Clip1 = Helpers.GetClipCapacity(activeWeapon.DesignerName);
         });
-        
-        return HookResult.Continue;
-    }
-
-    [GameEventHandler]
-    public HookResult OnBombPickup(EventBombPickup @event, GameEventInfo info)
-    {
-        Console.WriteLine("OnBombPickup event fired!");
         
         return HookResult.Continue;
     }
