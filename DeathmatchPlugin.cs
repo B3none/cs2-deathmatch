@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
 using Helpers = DeathmatchPlugin.Modules.Helpers;
@@ -27,7 +28,7 @@ public class DeathmatchPlugin : BasePlugin
     
     public override void Load(bool hotReload)
     {
-        Console.WriteLine("Deathmatch loaded!");
+        Console.WriteLine($"{LogPrefix}loaded!");
 
         RegisterListener<Listeners.OnMapStart>(OnMapStart);
 
@@ -39,6 +40,18 @@ public class DeathmatchPlugin : BasePlugin
 
     private void OnMapStart(string mapName)
     {
+        var gameModeCvar = ConVar.Find("game_mode");
+        if (gameModeCvar != null && gameModeCvar.GetPrimitiveValue<int>() != 2)
+        {
+            throw new Exception($"{LogPrefix}This plugin requires game_mode to be set to 2.");
+        }
+
+        var gameTypeCvar = ConVar.Find("game_type");
+        if (gameTypeCvar != null && gameTypeCvar.GetPrimitiveValue<int>() != 1)
+        {
+            throw new Exception($"{LogPrefix}This plugin requires game_type to be set to 1.");
+        }
+        
         AddTimer(0.5f, () =>
         {
             // Update spawn point statuses.
