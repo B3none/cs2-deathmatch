@@ -157,17 +157,6 @@ public class DeathmatchPlugin : BasePlugin
     {
         Console.WriteLine("OnPlayerSpawn event fired!");
         
-        var player = @event.Userid;
-        
-        if (!Helpers.IsValidPlayer(player))
-        {
-            return HookResult.Continue;
-        }
-        
-        // Remove a players weapons and allocate them a new set.
-        // player.RemoveWeapons();
-        // AllocationManager.Allocate(player);
-        
         return HookResult.Continue;
     }
 
@@ -175,6 +164,32 @@ public class DeathmatchPlugin : BasePlugin
     public HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
     {
         Console.WriteLine("OnPlayerDeath event fired!");
+
+        var attacker = @event.Attacker;
+        
+        Server.NextFrame(() =>
+        {
+            // Refill clip on kill.
+            if (
+                attacker == null 
+                || !Helpers.IsValidPlayer(attacker)
+                || attacker.PlayerPawn.Value == null
+                || !attacker.PlayerPawn.Value.IsValid
+                || attacker.PlayerPawn.Value.WeaponServices == null
+            )
+            {
+                return;
+            }
+        
+            var activeWeapon = attacker.PlayerPawn.Value.WeaponServices.ActiveWeapon.Value;
+
+            if (activeWeapon == null || !activeWeapon.IsValid)
+            {
+                return;
+            }
+        
+            activeWeapon.Clip1 = Helpers.GetClipCapacity(activeWeapon.DesignerName);
+        });
         
         return HookResult.Continue;
     }
