@@ -5,7 +5,7 @@ CS2 implementation of FFA DM. Based on the version for CS:GO by Maxximou5.
 This plugin is currently in development and is not ready for use.
 
 ## Features / Roadmap
-- [x] Temporary weapon allocation (hard coded)
+- [x] Replenish clip on kill
 - [ ] Configuration for headshot only / limiting certain weapons.
 - [ ] Custom spawn logic
 
